@@ -1,0 +1,118 @@
+/* src/App.css */
+
+/* Overall page background */
+body {
+  background-color: #2c2c2c;
+  margin: 0;
+  padding: 0;
+}
+
+/* --- Full-Page Hero Header Styles --- */
+.full-page-header {
+  height: 100vh; /* This is the key property for full viewport height */
+  width: 100%;
+  background-color: #333;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  color: #f8f8f8;
+}
+
+.header-content-wrapper {
+  text-align: center;
+  max-width: 800px; /* Adjust as needed */
+  padding: 2rem;
+}
+
+.header-brand {
+  margin-bottom: 2rem;
+}
+
+.logo-link {
+  font-size: 3rem;
+  font-weight: 700;
+  color: #fff;
+  text-decoration: none;
+  line-height: 1.2;
+}
+
+.search-bar-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #444;
+  border-radius: 25px;
+  max-width: 500px;
+  margin: 1rem auto 0;
+}
+
+.search-input {
+  border: none;
+  background-color: transparent;
+  color: #fff;
+  padding: 0.75rem 1.5rem;
+  flex-grow: 1;
+  outline: none;
+  font-size: 1rem;
+}
+
+.search-input::placeholder {
+  color: #bbb;
+}
+
+.search-button {
+  background-color: transparent;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  cursor: pointer;
+}
+
+.search-button svg {
+  color: #fff;
+}
+
+.header-nav {
+  margin-top: 2rem;
+}
+
+.header-nav ul {
+  display: flex;
+  justify-content: center;
+  list-style: none;
+  padding: 0;
+  margin-bottom: 1.5rem;
+  gap: 2.5rem;
+}
+
+.header-nav a {
+  font-size: 1.2rem;
+  font-weight: 500;
+  color: #f0f0f0;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.header-nav a:hover {
+  color: #007bff;
+}
+
+.user-actions {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+}
+
+.action-link {
+  font-size: 1.2rem;
+  font-weight: 500;
+  color: #f0f0f0;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.action-link:hover {
+  color: #007bff;
+}
