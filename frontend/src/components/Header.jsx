@@ -16,7 +16,12 @@ const Header = () => {
             />
           </Link>
         </div>
-        
+        <nav className="main-nav">
+          <Link to="/">Home</Link>
+          <Link to="/categories">Categories</Link>
+          <Link to="/orders">Orders</Link>
+          <Link to="/customer-care">Customer Care</Link>
+        </nav>
         <div className="search-bar-container">
           <input type="text" placeholder="Search for products..." className="search-input" />
           <button className="search-button">
@@ -55,7 +60,8 @@ const Header = () => {
           <li><Link to="/products/men">Men</Link></li>
           <li><Link to="/products/women">Women</Link></li>
           <li><Link to="/products/accessories">Accessories</Link></li>
-          <li><Link to="/contact">Contact</Link></li>
+          <li><Link to="/contact">Near stores</Link></li>
+          
         </ul>
       </nav>
     </header>
