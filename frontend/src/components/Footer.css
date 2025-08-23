@@ -1,0 +1,90 @@
+.footer {
+  background-color: #222;
+  color: white;
+  padding: 50px 20px 20px;
+}
+
+.footer-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 30px;
+  max-width: 1200px;
+  margin: auto;
+}
+
+.footer-section h3 {
+  font-size: 1.2rem;
+  margin-bottom: 15px;
+  border-bottom: 2px solid #444;
+  padding-bottom: 5px;
+}
+
+.footer-section p, 
+.footer-section li {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: #ccc;
+}
+
+.footer-section ul {
+  list-style: none;
+  padding: 0;
+}
+
+.footer-section li:hover {
+  color: #fff;
+  cursor: pointer;
+}
+
+.footer-btn {
+  background-color: #ff6600;
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+.footer-btn:hover {
+  background-color: #e65c00;
+}
+
+.social-icons a {
+  font-size: 1.5rem;
+  margin-right: 10px;
+  color: white;
+  text-decoration: none;
+}
+.social-icons a:hover {
+  color: #ff6600;
+}
+
+.newsletter {
+  display: flex;
+  gap: 8px;
+}
+.newsletter input {
+  flex: 1;
+  padding: 8px;
+  border-radius: 4px;
+  border: none;
+}
+.newsletter button {
+  background: #ff6600;
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.newsletter button:hover {
+  background: #e65c00;
+}
+
+.footer-bottom {
+  text-align: center;
+  border-top: 1px solid #444;
+  margin-top: 30px;
+  padding-top: 15px;
+  font-size: 0.9rem;
+  color: #aaa;
+}

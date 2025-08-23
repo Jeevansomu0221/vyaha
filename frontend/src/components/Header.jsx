@@ -18,7 +18,9 @@ const Header = () => {
         </div>
         <nav className="main-nav">
           <Link to="/">Home</Link>
-          <Link to="/categories">Categories</Link>
+          <Link to="/Products">Cloths</Link>
+          <Link to="/Electronics">Electronis</Link>
+          <Link to="/foods">Foods</Link>
           <Link to="/orders">Orders</Link>
           <Link to="/customer-care">Customer Care</Link>
         </nav>
@@ -53,17 +55,6 @@ const Header = () => {
           </Link>
         </nav>
       </div>
-
-      <nav className="header-main-nav">
-        <ul>
-          <li><Link to="/products/new-arrivals">New Arrivals</Link></li>
-          <li><Link to="/products/men">Men</Link></li>
-          <li><Link to="/products/women">Women</Link></li>
-          <li><Link to="/products/accessories">Accessories</Link></li>
-          <li><Link to="/contact">Near stores</Link></li>
-          
-        </ul>
-      </nav>
     </header>
   );
 };

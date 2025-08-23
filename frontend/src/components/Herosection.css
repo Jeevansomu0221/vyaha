@@ -1,0 +1,108 @@
+/* Hero Section container */
+.hero-section {
+  width: 100%;
+  height: 500px; /* fixed height for desktop */
+  position: relative;
+  overflow: hidden;
+}
+
+/* Swiper full width/height */
+.hero-swiper {
+  width: 100%;
+  height: 100%;
+}
+
+/* Each slide */
+.hero-slide {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #ffffff; /* To avoid white bars */
+}
+
+/* Hero image */
+.hero-slide img {
+   width: 90%;
+  height: 100%;
+  object-fit: fill; /* Fit image without cropping */
+  background-color: #ffffff; /* Fills empty space */
+  border-radius: 30px;
+}
+
+/* Content overlay */
+.hero-content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  text-align: center;
+  max-width: 80%;
+  background: rgba(0, 0, 0, 0.4); /* subtle overlay for text visibility */
+  padding: 20px 30px;
+  border-radius: 8px;
+}
+
+.hero-content h2 {
+  font-size: 2.5rem;
+  margin-bottom: 10px;
+}
+
+.hero-content p {
+  font-size: 1.2rem;
+  margin-bottom: 20px;
+}
+
+.hero-content button {
+  background-color: #ff4d4d;
+  border: none;
+  padding: 10px 25px;
+  color: white;
+  font-size: 1rem;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background 0.3s ease;
+}
+
+.hero-content button:hover {
+  background-color: #e03e3e;
+}
+
+/* Swiper pagination style */
+.swiper-pagination-bullet {
+  background: white;
+  opacity: 0.8;
+}
+
+.swiper-pagination-bullet-active {
+  background: #ff4d4d;
+}
+
+/* Navigation arrows */
+.swiper-button-next,
+.swiper-button-prev {
+  color: white;
+  transition: color 0.3s ease;
+}
+
+.swiper-button-next:hover,
+.swiper-button-prev:hover {
+  color: #ff4d4d;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .hero-section {
+    height: 400px; /* smaller height for mobile */
+  }
+
+  .hero-content h2 {
+    font-size: 1.8rem;
+  }
+
+  .hero-content p {
+    font-size: 1rem;
+  }
+}
