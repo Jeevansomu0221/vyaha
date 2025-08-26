@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import "./ProductListingPage.css";
 
-import cloth1 from "../assets/cloths/clothimg1.jpg";
+import cloth1 from "../assets/cloths/clothimg1.JPG";
 import cloth2 from "../assets/cloths/clothimg2.jpg";
 import cloth3 from "../assets/cloths/clothimg3.jpg";
 import cloth4 from "../assets/cloths/clothimg4.jpg";
