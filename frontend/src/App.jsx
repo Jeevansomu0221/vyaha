@@ -11,6 +11,7 @@ import ElectronicsListingPage from "./pages/ElectronicsListingPage.jsx";
 import FoodsListingPage from "./pages/FoodsListingPage.jsx";
 import ProductDetailsPage from "./pages/ProductDetailsPage.jsx";
 import CartPage from "./pages/CartPage.jsx";
+import OrdersPage from "./pages/OrdersPage.jsx";
 
 import { CartProvider } from "./context/CartContext.jsx";
 
@@ -37,6 +38,9 @@ export default function App() {
 
         {/* Cart Page */}
         <Route path="/cart" element={<CartPage />} />
+        
+        {/* Orders/Checkout Page */}
+        <Route path="/orders" element={<OrdersPage />} />
 
         {/* Product Details (shared across categories) */}
         <Route path="/product/:id" element={<ProductDetailsPage />} />
