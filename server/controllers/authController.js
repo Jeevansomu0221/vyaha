@@ -1,3 +1,4 @@
+// controllers/authController.js
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import User from "../models/User.js";
@@ -6,34 +7,81 @@ import { sendEmail } from "../utils/sendEmail.js";
 
 export const signup = async (req, res) => {
   try {
+    console.log("📥 Signup request received:", { 
+      name: req.body.name, 
+      email: req.body.email,
+      password: "***" 
+    });
+
     const { name, email, password } = req.body;
 
-    const existing = await User.findOne({ email });
-    if (existing) return res.status(400).json({ message: "User already exists" });
+    // Validate input
+    if (!name || !email || !password) {
+      return res.status(400).json({ message: "All fields are required" });
+    }
 
+    if (password.length < 6) {
+      return res.status(400).json({ message: "Password must be at least 6 characters" });
+    }
+
+    // Check if user exists
+    const existing = await User.findOne({ email });
+    if (existing) {
+      return res.status(400).json({ message: "User already exists" });
+    }
+
+    // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
+    // Generate OTP
     const otp = generateOTP();
+    console.log("🔢 Generated OTP:", otp);
 
+    // Create user
     const user = new User({
       name,
       email,
       password: hashedPassword,
       otp,
-      otpExpiry: Date.now() + 10 * 60 * 1000, // 10 min
+      otpExpiry: Date.now() + 10 * 60 * 1000, // 10 minutes
       verified: false,
     });
 
     await user.save();
+    console.log("✅ User saved to database");
 
-    await sendEmail(email, "Verify your account", `Your OTP is: ${otp}`);
+    // TEMPORARY FIX: Comment out email sending for now
+    console.log("📧 [TEMPORARY] OTP would be sent to:", email);
+    console.log("📧 [TEMPORARY] OTP:", otp);
+    
+    /*
+    // Uncomment this when email is working
+    try {
+      await sendEmail(email, "Verify your VyahaWeb account", `Your OTP verification code is: ${otp}`);
+      console.log("✅ Email sent successfully");
+    } catch (emailError) {
+      console.error("❌ Email sending failed:", emailError);
+      // Delete the user if email fails? Or proceed?
+      // await User.findByIdAndDelete(user._id);
+      // return res.status(500).json({ message: "Failed to send verification email" });
+    }
+    */
 
-    res.json({ message: "OTP sent to email. Please verify." });
+    res.json({ 
+      message: "OTP sent to email. Please verify.",
+      debug_otp: otp // Remove this in production
+    });
+    
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    console.error("❌ SIGNUP ERROR:", err);
+    res.status(500).json({ 
+      message: "Internal server error during signup",
+      error: process.env.NODE_ENV === 'development' ? err.message : undefined
+    });
   }
 };
 
+// Keep your verifyOTP and signin functions as they were
 export const verifyOTP = async (req, res) => {
   try {
     const { email, otp } = req.body;
