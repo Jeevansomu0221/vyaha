@@ -17,6 +17,11 @@ app.use(
     allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
+// Add this before your routes in server/index.js
+app.use((req, res, next) => {
+  console.log(`📍 ${req.method} ${req.path}`);
+  next();
+});
 
 app.use(express.json());
 connectDB();
