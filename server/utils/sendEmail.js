@@ -1,27 +1,44 @@
+// server/utils/sendEmail.js
 import nodemailer from "nodemailer";
 
-const transporter = nodemailer.createTransport({
-  service: "Gmail",
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS, // Use App Password, not regular password
-  },
-});
-
-export const sendEmail = async (to, subject, text) => {
+const sendEmail = async (to, subject, text) => {
   try {
+    console.log("📧 Attempting to send email...");
+    console.log("From:", process.env.EMAIL_USER);
+    console.log("To:", to);
+
+    if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
+      throw new Error("Email credentials missing in .env file");
+    }
+
+    // ✅ Corrected: use createTransport (not createTransporter)
+    const transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
+      },
+    });
+
+    // Verify transporter
+    await transporter.verify();
+    console.log("✅ Email transporter verified");
+
     const mailOptions = {
-      from: `"VyahaWeb" <${process.env.EMAIL_USER}>`,
+      from: process.env.EMAIL_USER,
       to,
       subject,
       text,
     };
-    
+
     const result = await transporter.sendMail(mailOptions);
-    console.log("✅ Email sent successfully:", result.messageId);
+    console.log("✅ Email sent successfully! Message ID:", result.messageId);
     return result;
   } catch (error) {
-    console.error("❌ Email sending failed:", error);
+    console.error("❌ Email sending failed:", error.message);
+    console.error("Full error details:", error);
     throw error;
   }
 };
+
+export default sendEmail;

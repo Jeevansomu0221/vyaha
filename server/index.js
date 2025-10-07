@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import cors from "cors";
 import connectDB from "./config/db.js";
 import authRoutes from "./routes/authRoutes.js";
+import sendEmail from "./utils/sendEmail.js";
 
 dotenv.config();
 
@@ -26,6 +27,31 @@ app.use((req, res, next) => {
 app.use(express.json());
 connectDB();
 app.use("/api/auth", authRoutes);
+
+
+// Change from POST to GET for easier testing
+app.get("/api/test-email", async (req, res) => {
+  try {
+    const testEmail = "jeevansomu.ch@gmail.com"; // Your email
+    console.log("🔄 Testing email to:", testEmail);
+    
+    await sendEmail(
+      testEmail, 
+      "VyahaWeb Test Email", 
+      "This is a test email from your server!"
+    );
+    
+    console.log("✅ Test email sent successfully");
+    res.json({ success: true, message: "Test email sent to " + testEmail });
+  } catch (error) {
+    console.error("❌ Test email failed:", error.message);
+    res.status(500).json({ 
+      success: false, 
+      error: error.message,
+      note: "Check EMAIL_USER and EMAIL_PASS in .env" 
+    });
+  }
+});
 
 const PORT = process.env.PORT || 7000;
 
