@@ -4,7 +4,8 @@ import cors from "cors";
 import connectDB from "./config/db.js";
 import authRoutes from "./routes/authRoutes.js";
 import sendEmail from "./utils/sendEmail.js";
-
+import productRoutes from "./routes/productRoutes.js";
+import sellerAuthRoutes from "./routes/authSeller.js";
 dotenv.config();
 
 const app = express();
@@ -28,6 +29,8 @@ app.use(express.json());
 connectDB();
 app.use("/api/auth", authRoutes);
 
+app.use("/api/seller", sellerAuthRoutes);
+app.use("/api/products", productRoutes);
 
 // Change from POST to GET for easier testing
 app.get("/api/test-email", async (req, res) => {
