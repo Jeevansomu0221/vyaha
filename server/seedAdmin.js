@@ -1,23 +1,35 @@
-require('dotenv').config();
-const mongoose = require('mongoose');
-const bcrypt = require('bcryptjs');
-const User = require('./models/User');
+// server/seedAdmin.js
+import mongoose from "mongoose";
+import bcrypt from "bcryptjs";
+import dotenv from "dotenv";
+import User from "./models/User.js";
 
-const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/vyaha_db';
+dotenv.config();
 
-async function seed() {
-  await mongoose.connect(MONGO_URI);
-  const email = process.env.ADMIN_EMAIL || 'admin@vyaha.local';
-  const password = process.env.ADMIN_PASSWORD || 'ChangeMe123!';
-  const existing = await User.findOne({ email });
-  if (existing) {
-    console.log('Admin already exists:', email);
-    process.exit(0);
+const seedAdmin = async () => {
+  try {
+    await mongoose.connect(process.env.MONGO_URI);
+    const existingAdmin = await User.findOne({ email: process.env.ADMIN_EMAIL });
+    if (existingAdmin) {
+      console.log("✅ Admin already exists");
+      return;
+    }
+
+    const hashedPassword = await bcrypt.hash(process.env.ADMIN_PASSWORD, 10);
+    await User.create({
+      name: "Admin",
+      email: process.env.ADMIN_EMAIL,
+      password: hashedPassword,
+      role: "admin",
+      verified: true,
+    });
+
+    console.log("✅ Admin seeded successfully!");
+  } catch (err) {
+    console.error("❌ Error seeding admin:", err);
+  } finally {
+    mongoose.connection.close();
   }
-  const hash = await bcrypt.hash(password, 10);
-  const user = new User({ email, passwordHash: hash, isAdmin: true, name: 'Vyaha Admin' });
-  await user.save();
-  console.log('Admin created:', email);
-  mongoose.disconnect();
-}
-seed().catch(err => console.error(err));
+};
+
+seedAdmin();

@@ -6,6 +6,7 @@ import authRoutes from "./routes/authRoutes.js";
 import sendEmail from "./utils/sendEmail.js";
 import productRoutes from "./routes/productRoutes.js";
 import sellerAuthRoutes from "./routes/authSeller.js";
+import adminAuthRoutes from "./routes/authAdmin.js";
 dotenv.config();
 
 const app = express();
@@ -28,7 +29,7 @@ app.use((req, res, next) => {
 app.use(express.json());
 connectDB();
 app.use("/api/auth", authRoutes);
-
+app.use("/api/admin", adminAuthRoutes);
 app.use("/api/seller", sellerAuthRoutes);
 app.use("/api/products", productRoutes);
 
