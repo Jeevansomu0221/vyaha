@@ -8,7 +8,7 @@ import sendEmail from "../utils/sendEmail.js";
 export const sellerSignup = async (req, res) => {
   try {
     const { name, email, password, storeName } = req.body;
-    if (!name || !email || !password)
+    if (!name || !email || !password || !storeName)
       return res.status(400).json({ message: "All fields are required" });
 
     const existingSeller = await Seller.findOne({ email });
@@ -16,8 +16,6 @@ export const sellerSignup = async (req, res) => {
       return res.status(400).json({ message: "Seller already exists" });
 
     const hashedPassword = await bcrypt.hash(password, 10);
-
-    // Generate 6-digit OTP
     const otp = crypto.randomInt(100000, 999999).toString();
 
     const seller = new Seller({
@@ -29,15 +27,14 @@ export const sellerSignup = async (req, res) => {
     });
     await seller.save();
 
-    // Send OTP email
     await sendEmail(
       email,
-      "VyahaWeb Seller OTP Verification",
-      `Hello ${name},\n\nYour OTP code is: ${otp}\n\nThank you!`
+      "Vyaha Seller OTP Verification",
+      `Hello ${name},\n\nYour OTP is: ${otp}\n\nTeam Vyaha`
     );
 
     res.status(201).json({
-      message: "Seller registered successfully. Check your email for OTP.",
+      message: "Seller registered successfully. Please verify your email using OTP.",
     });
   } catch (err) {
     console.error("❌ Seller Signup Error:", err);
@@ -56,7 +53,7 @@ export const verifySellerOTP = async (req, res) => {
       return res.status(400).json({ message: "Invalid OTP" });
 
     seller.isVerified = true;
-    seller.otp = null; // clear OTP after verification
+    seller.otp = null;
     await seller.save();
 
     res.json({ message: "OTP verified successfully" });
@@ -91,5 +88,83 @@ export const sellerSignin = async (req, res) => {
   } catch (err) {
     console.error("❌ Seller Signin Error:", err);
     res.status(500).json({ message: err.message });
+  }
+};
+
+// --------------------- FORGOT PASSWORD ---------------------
+export const forgotPassword = async (req, res) => {
+  try {
+    const { email } = req.body;
+    const seller = await Seller.findOne({ email });
+    if (!seller) return res.status(404).json({ message: "Seller not found" });
+
+    const resetToken = crypto.randomBytes(32).toString("hex");
+    const resetLink = `${process.env.CLIENT_URL}/reset-password/seller/${resetToken}`;
+
+    seller.resetToken = resetToken;
+    seller.resetTokenExpiry = Date.now() + 15 * 60 * 1000; // 15 min
+    await seller.save();
+
+    await sendEmail(
+      email,
+      "Vyaha Seller Password Reset",
+      `Click here to reset your password:\n${resetLink}\n\nThis link expires in 15 minutes.`
+    );
+
+    res.json({ message: "Password reset link sent to your email" });
+  } catch (err) {
+    console.error("❌ Forgot Password Error:", err);
+    res.status(500).json({ message: err.message });
+  }
+};
+
+// --------------------- RESET PASSWORD ---------------------
+export const resetPassword = async (req, res) => {
+  try {
+    const { token } = req.params;
+    const { password } = req.body;
+
+    const seller = await Seller.findOne({
+      resetToken: token,
+      resetTokenExpiry: { $gt: Date.now() },
+    });
+    if (!seller)
+      return res.status(400).json({ message: "Invalid or expired token" });
+
+    const hashed = await bcrypt.hash(password, 10);
+    seller.password = hashed;
+    seller.resetToken = null;
+    seller.resetTokenExpiry = null;
+    await seller.save();
+
+    res.json({ message: "Password reset successfully" });
+  } catch (err) {
+    console.error("❌ Reset Password Error:", err);
+    res.status(500).json({ message: err.message });
+  }
+};
+// --------------------- GET SELLER PROFILE ---------------------
+export const getSellerProfile = async (req, res) => {
+  try {
+    const seller = await Seller.findById(req.sellerId).select("-password -otp");
+    if (!seller) return res.status(404).json({ message: "Seller not found" });
+    res.json({ data: seller });
+  } catch (err) {
+    console.error("❌ Get Seller Profile Error:", err);
+    res.status(500).json({ message: "Failed to fetch profile" });
+  }
+};
+
+// --------------------- UPDATE SELLER PROFILE ---------------------
+export const updateSellerProfile = async (req, res) => {
+  try {
+    const updatedSeller = await Seller.findByIdAndUpdate(req.sellerId, req.body, {
+      new: true,
+    }).select("-password -otp");
+    if (!updatedSeller) return res.status(404).json({ message: "Seller not found" });
+    res.json({ data: updatedSeller });
+  } catch (err) {
+    console.error("❌ Update Seller Profile Error:", err);
+    res.status(500).json({ message: "Failed to update profile" });
   }
 };

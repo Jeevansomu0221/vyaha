@@ -1,4 +1,3 @@
-// server/middleware/authSeller.js
 import jwt from "jsonwebtoken";
 
 const authSeller = (req, res, next) => {

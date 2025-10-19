@@ -1,7 +1,7 @@
-const jwt = require('jsonwebtoken');
-const User = require('../models/User');
+import jwt from 'jsonwebtoken';
+import User from '../models/User.js';
 
-module.exports = async function (req, res, next) {
+const authAdmin = async function (req, res, next) {
   const auth = req.headers.authorization;
   if (!auth || !auth.startsWith('Bearer ')) return res.status(401).json({ message: 'No token' });
   const token = auth.split(' ')[1];
@@ -15,3 +15,5 @@ module.exports = async function (req, res, next) {
     return res.status(401).json({ message: 'Token invalid' });
   }
 };
+
+export default authAdmin;

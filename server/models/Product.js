@@ -1,14 +1,16 @@
-// server/models/Product.js
 import mongoose from "mongoose";
 
 const productSchema = new mongoose.Schema({
-  title: { type: String, required: true },
+  title: String,
   description: String,
-  price: { type: Number, required: true },
-  image: String,
+  price: Number,
   category: String,
-  seller: { type: mongoose.Schema.Types.ObjectId, ref: "Seller" },
+  image: String,
+  quantity: Number,
+  seller: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+  status: { type: String, enum: ["pending", "approved", "rejected"], default: "pending" },
 }, { timestamps: true });
 
+// Change this to default export
 const Product = mongoose.model("Product", productSchema);
-export default Product;
+export default Product; // Add this line
