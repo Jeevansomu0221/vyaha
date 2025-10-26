@@ -1,49 +1,28 @@
-const express = require("express");
+// server/routes/orderRoutes.js
+import express from "express";
+import authCustomer from "../middleware/authCustomer.js";
+import {
+  createOrder,
+  getUserOrders,
+  getOrderById,
+  updateOrderStatus,
+} from "../controllers/orderController.js";
+
 const router = express.Router();
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
-const User = require("../models/User"); // your User model
 
-// Customer Signup
-router.post("/register", async (req, res) => {
-  try {
-    const { name, email, password } = req.body;
+// All order routes require customer authentication
+router.use(authCustomer);
 
-    if (!name || !email || !password) {
-      return res.status(400).json({ message: "All fields required" });
-    }
+// POST /api/orders - Create new order
+router.post("/", createOrder);
 
-    const existingUser = await User.findOne({ email });
-    if (existingUser) {
-      return res.status(400).json({ message: "Email already exists" });
-    }
+// GET /api/orders - Get user's orders
+router.get("/", getUserOrders);
 
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const user = new User({ name, email, password: hashedPassword, role: "customer" });
-    await user.save();
+// GET /api/orders/:id - Get single order by ID
+router.get("/:id", getOrderById);
 
-    res.status(201).json({ message: "Signup successful" });
-  } catch (err) {
-    res.status(500).json({ message: "Server error", error: err.message });
-  }
-});
+// PUT /api/orders/:id/status - Update order status (for admin/seller)
+router.put("/:id/status", updateOrderStatus);
 
-// Customer Login
-router.post("/login", async (req, res) => {
-  try {
-    const { email, password } = req.body;
-    const user = await User.findOne({ email, role: "customer" });
-
-    if (!user) return res.status(400).json({ message: "Invalid credentials" });
-
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) return res.status(400).json({ message: "Invalid credentials" });
-
-    const token = jwt.sign({ id: user._id, role: "customer" }, process.env.JWT_SECRET, { expiresIn: "1d" });
-    res.json({ token, user: { id: user._id, name: user.name, email: user.email } });
-  } catch (err) {
-    res.status(500).json({ message: "Server error", error: err.message });
-  }
-});
-
-module.exports = router;
+export default router;

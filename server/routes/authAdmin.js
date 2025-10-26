@@ -1,3 +1,4 @@
+// server/routes/authAdmin.js
 import express from "express";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
@@ -5,22 +6,44 @@ import User from "../models/User.js";
 
 const router = express.Router();
 
+// POST /api/admin/auth/signin
 router.post("/signin", async (req, res) => {
   try {
     const { email, password } = req.body;
-    const admin = await User.findOne({ email, role: "admin" });
 
-    if (!admin) return res.status(404).json({ message: "Admin not found" });
+    console.log("🔐 Admin login attempt:", email);
 
+    // Find admin user
+    const admin = await User.findOne({ email });
+    
+    if (!admin) {
+      console.log("❌ Admin not found:", email);
+      return res.status(400).json({ message: "Admin not found" });
+    }
+
+    // Check if user is admin
+    if (!admin.isAdmin) {
+      console.log("❌ User is not admin:", email);
+      return res.status(403).json({ message: "Access denied. Admin privileges required." });
+    }
+
+    // Verify password
     const isMatch = await bcrypt.compare(password, admin.password);
-    if (!isMatch) return res.status(400).json({ message: "Invalid credentials" });
+    if (!isMatch) {
+      console.log("❌ Invalid password for:", email);
+      return res.status(400).json({ message: "Invalid credentials" });
+    }
 
-    const token = jwt.sign({ id: admin._id, role: "admin" }, process.env.JWT_SECRET, {
-      expiresIn: "7d",
-    });
+    // Generate JWT token
+    const token = jwt.sign(
+      { id: admin._id, role: "admin" },
+      process.env.JWT_SECRET,
+      { expiresIn: "7d" }
+    );
+
+    console.log("✅ Admin logged in successfully:", email);
 
     res.json({
-      success: true,
       token,
       admin: {
         id: admin._id,
@@ -29,8 +52,8 @@ router.post("/signin", async (req, res) => {
       },
     });
   } catch (err) {
-    console.error("❌ Admin login error:", err);
-    res.status(500).json({ message: "Server error" });
+    console.error("❌ Admin Signin Error:", err);
+    res.status(500).json({ message: err.message });
   }
 });
 

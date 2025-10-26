@@ -1,21 +1,35 @@
-// middleware/authCustomer.js
-const jwt = require("jsonwebtoken");
-const User = require("../models/User");
+// server/middleware/authCustomer.js
+import jwt from "jsonwebtoken";
+import User from "../models/User.js";
 
 const authCustomer = async (req, res, next) => {
-  const token = req.headers.authorization?.split(" ")[1]; // Bearer token
-  if (!token) return res.status(401).json({ message: "Not authenticated" });
-
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    const user = await User.findById(decoded.id);
-    if (!user) return res.status(401).json({ message: "User not found" });
+    // Get token from header
+    const token = req.header("Authorization")?.replace("Bearer ", "");
 
-    req.user = user; // attach user to request
+    if (!token) {
+      return res.status(401).json({ message: "No authentication token provided" });
+    }
+
+    // Verify token
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    // Find user
+    const user = await User.findById(decoded.id).select("-password");
+
+    if (!user) {
+      return res.status(401).json({ message: "User not found" });
+    }
+
+    // Attach user to request
+    req.userId = user._id;
+    req.user = user;
+    
     next();
   } catch (err) {
-    res.status(401).json({ message: "Token is invalid" });
+    console.error("❌ Auth Customer Error:", err.message);
+    res.status(401).json({ message: "Invalid or expired token" });
   }
 };
 
-module.exports = authCustomer;
+export default authCustomer;

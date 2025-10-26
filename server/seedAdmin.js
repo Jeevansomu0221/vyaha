@@ -6,30 +6,36 @@ import User from "./models/User.js";
 
 dotenv.config();
 
-const seedAdmin = async () => {
+const createAdmin = async () => {
   try {
     await mongoose.connect(process.env.MONGO_URI);
-    const existingAdmin = await User.findOne({ email: process.env.ADMIN_EMAIL });
+    console.log("📊 Connected to MongoDB");
+
+    // Check if admin exists
+    const existingAdmin = await User.findOne({ email: "admin@vyahaweb.com" });
     if (existingAdmin) {
       console.log("✅ Admin already exists");
-      return;
+      process.exit(0);
     }
 
-    const hashedPassword = await bcrypt.hash(process.env.ADMIN_PASSWORD, 10);
-    await User.create({
+    // Create admin
+    const hashedPassword = await bcrypt.hash("admin123", 10);
+    const admin = new User({
       name: "Admin",
-      email: process.env.ADMIN_EMAIL,
+      email: "admin@vyahaweb.com",
       password: hashedPassword,
-      role: "admin",
-      verified: true,
+      isAdmin: true, // ← Important!
     });
 
-    console.log("✅ Admin seeded successfully!");
+    await admin.save();
+    console.log("✅ Admin created successfully");
+    console.log("Email: admin@vyahaweb.com");
+    console.log("Password: admin123");
+    process.exit(0);
   } catch (err) {
-    console.error("❌ Error seeding admin:", err);
-  } finally {
-    mongoose.connection.close();
+    console.error("❌ Error:", err);
+    process.exit(1);
   }
 };
 
-seedAdmin();
+createAdmin();

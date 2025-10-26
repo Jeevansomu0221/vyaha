@@ -1,23 +1,14 @@
+// server/models/User.js
 import mongoose from "mongoose";
 
 const userSchema = new mongoose.Schema(
   {
-    name: String,
-    email: String,
-    password: String,
-    role: { type: String, enum: ["customer", "seller", "admin"], default: "customer" },
-
-    // 🧱 Seller profile fields
+    name: { type: String, required: true },
+    email: { type: String, required: true, unique: true },
+    password: { type: String, required: true },
+    isAdmin: { type: Boolean, default: false }, // ← CRITICAL!
     phone: String,
-    storeName: String,
-    storeAddress: String,
-    city: String,
-    state: String,
-    pincode: String,
-
-    verified: { type: Boolean, default: false },
-    otp: String,
-    otpExpiry: Date,
+    address: String,
   },
   { timestamps: true }
 );

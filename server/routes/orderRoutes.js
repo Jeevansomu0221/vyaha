@@ -1,7 +1,28 @@
-const express = require("express");
-const router = express.Router();
-const { createOrder } = require("../controllers/orderController");
-const authCustomer = require("../middleware/authCustomer");
+// server/routes/orderRoutes.js
+import express from "express";
+import authCustomer from "../middleware/authCustomer.js";
+import {
+  createOrder,
+  getUserOrders,
+  getOrderById,
+  updateOrderStatus,
+} from "../controllers/orderController.js";
 
-router.post("/create", authCustomer, createOrder); // only signed-in users
-module.exports = router;
+const router = express.Router();
+
+// All order routes require customer authentication
+router.use(authCustomer);
+
+// POST /api/orders - Create new order
+router.post("/", createOrder);
+
+// GET /api/orders - Get user's orders
+router.get("/", getUserOrders);
+
+// GET /api/orders/:id - Get single order by ID
+router.get("/:id", getOrderById);
+
+// PUT /api/orders/:id/status - Update order status (for admin/seller)
+router.put("/:id/status", updateOrderStatus);
+
+export default router;
