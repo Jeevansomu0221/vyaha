@@ -3,17 +3,17 @@ import { Link } from "react-router-dom";
 import "./ProductListingPage.css"; // reuse same styles
 
 // Import food images
-import f1 from "../Assets/food/sec5-1.jpg";
-import f2 from "../Assets/food/sec5-2.jpg";
-import f3 from "../Assets/food/sec5-3.jpg";
-import f4 from "../Assets/food/sec5-4.jpg";
-import f5 from "../Assets/food/sec5-5.jpg";
-import f6 from "../Assets/food/sec6-1.jpg";
-import f7 from "../Assets/food/sec6-2.jpg";
-import f8 from "../Assets/food/sec6-3.jpg";
-import f9 from "../Assets/food/sec6-4.jpg";
-import f10 from "../Assets/food/sec6-5.jpg";
-import f11 from "../Assets/food/sec6-6.jpg";
+import f1 from "../assets/food/sec5-1.jpg";
+import f2 from "../assets/food/sec5-2.jpg";
+import f3 from "../assets/food/sec5-3.jpg";
+import f4 from "../assets/food/sec5-4.jpg";
+import f5 from "../assets/food/sec5-5.jpg";
+import f6 from "../assets/food/sec6-1.jpg";
+import f7 from "../assets/food/sec6-2.jpg";
+import f8 from "../assets/food/sec6-3.jpg";
+import f9 from "../assets/food/sec6-4.jpg";
+import f10 from "../assets/food/sec6-5.jpg";
+import f11 from "../assets/food/sec6-6.jpg";
 
 // ✅ Product type
 interface Product {

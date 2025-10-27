@@ -3,12 +3,12 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import "./ProductListingPage.css";
 
-import cloth1 from "../Assets/cloths/clothimg1.jpg"
-import cloth2 from "../Assets/cloths/clothimg2.jpg";
-import cloth3 from "../Assets/cloths/clothimg3.jpg";
-import cloth4 from "../Assets/cloths/clothimg4.jpg";
-import cloth5 from "../Assets/cloths/clothimg5.jpg";
-import cloth6 from "../Assets/cloths/clothimg6.jpg";
+import cloth1 from "../assets/cloths/clothimg1.jpg"
+import cloth2 from "../assets/cloths/clothimg2.jpg";
+import cloth3 from "../assets/cloths/clothimg3.jpg";
+import cloth4 from "../assets/cloths/clothimg4.jpg";
+import cloth5 from "../assets/cloths/clothimg5.jpg";
+import cloth6 from "../assets/cloths/clothimg6.jpg";
 
 const ProductListingPage = () => {
   const [sortOption, setSortOption] = useState("default");

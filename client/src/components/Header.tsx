@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import logo from "../Assets/vyahalogoo.png";
+import logo from "../assets/vyahalogoo.png";
 import "./Header.css";
 import { useAuth } from "../context/AuthContext"; // ✅ import auth
 

@@ -11,9 +11,9 @@ import "swiper/css/navigation";
 import "./HeroSection.css";
 
 // Import images
-import hero1 from "../Assets/hero/herosec1.png";
-import hero2 from "../Assets/hero/herosec2.png";
-import hero3 from "../Assets/hero/herosec3.png";
+import hero1 from "../assets/hero/herosec1.png";
+import hero2 from "../assets/hero/herosec2.png";
+import hero3 from "../assets/hero/herosec3.png";
 
 const HeroSection: React.FC = () => {
   const slides = [

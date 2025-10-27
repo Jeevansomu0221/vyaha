@@ -3,12 +3,12 @@ import { Link } from "react-router-dom";
 import "./ProductListingPage.css"; // Reuse the same CSS
 
 // Import electronics images from assets
-import elec1 from "../Assets/electronics/sec3-1.jpg";
-import elec2 from "../Assets/electronics/sec3-2.jpg";
-import elec3 from "../Assets/electronics/sec3-3.jpg";
-import elec4 from "../Assets/electronics/sec3-4.jpg";
-import elec5 from "../Assets/electronics/sec3-5.jpg";
-import elec6 from "../Assets/electronics/sec3-6.jpg";
+import elec1 from "../assets/electronics/sec3-1.jpg";
+import elec2 from "../assets/electronics/sec3-2.jpg";
+import elec3 from "../assets/electronics/sec3-3.jpg";
+import elec4 from "../assets/electronics/sec3-4.jpg";
+import elec5 from "../assets/electronics/sec3-5.jpg";
+import elec6 from "../assets/electronics/sec3-6.jpg";
 
 // ✅ Product type
 interface Product {

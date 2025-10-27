@@ -4,46 +4,46 @@ import { useNavigate } from "react-router-dom";
 import "./CategorySection.css";
 
 // --- image imports ---
-import cloth1 from "../Assets/cloths/clothimg1.jpg";
-import cloth2 from "../Assets/cloths/clothimg2.jpg";
-import cloth3 from "../Assets/cloths/clothimg3.jpg";
-import cloth4 from "../Assets/cloths/clothimg4.jpg";
-import cloth5 from "../Assets/cloths/clothimg5.jpg";
-import cloth6 from "../Assets/cloths/clothimg6.jpg";
+import cloth1 from "../assets/cloths/clothimg1.jpg";
+import cloth2 from "../assets/cloths/clothimg2.jpg";
+import cloth3 from "../assets/cloths/clothimg3.jpg";
+import cloth4 from "../assets/cloths/clothimg4.jpg";
+import cloth5 from "../assets/cloths/clothimg5.jpg";
+import cloth6 from "../assets/cloths/clothimg6.jpg";
 
-import clothsec21 from "../Assets/cloths/clothsec2-1.jpg";
-import clothsec22 from "../Assets/cloths/clothsec2-2.jpg";
-import clothsec23 from "../Assets/cloths/clothsec2-3.jpg";
-import clothsec24 from "../Assets/cloths/clothsec2-4.jpg";
-import clothsec25 from "../Assets/cloths/clothsec2-5.jpg";
-import clothsec26 from "../Assets/cloths/clothsec2-6.jpg";
+import clothsec21 from "../assets/cloths/clothsec2-1.jpg";
+import clothsec22 from "../assets/cloths/clothsec2-2.jpg";
+import clothsec23 from "../assets/cloths/clothsec2-3.jpg";
+import clothsec24 from "../assets/cloths/clothsec2-4.jpg";
+import clothsec25 from "../assets/cloths/clothsec2-5.jpg";
+import clothsec26 from "../assets/cloths/clothsec2-6.jpg";
 
-import sec31 from "../Assets/electronics/sec3-1.jpg";
-import sec32 from "../Assets/electronics/sec3-2.jpg";
-import sec33 from "../Assets/electronics/sec3-3.jpg";
-import sec34 from "../Assets/electronics/sec3-4.jpg";
-import sec35 from "../Assets/electronics/sec3-5.jpg";
-import sec36 from "../Assets/electronics/sec3-6.jpg";
+import sec31 from "../assets/electronics/sec3-1.jpg";
+import sec32 from "../assets/electronics/sec3-2.jpg";
+import sec33 from "../assets/electronics/sec3-3.jpg";
+import sec34 from "../assets/electronics/sec3-4.jpg";
+import sec35 from "../assets/electronics/sec3-5.jpg";
+import sec36 from "../assets/electronics/sec3-6.jpg";
 
-import sec41 from "../Assets/electronics/sec4-1.jpg";
-import sec42 from "../Assets/electronics/sec4-2.jpg";
-import sec43 from "../Assets/electronics/sec4-3.jpg";
-import sec44 from "../Assets/electronics/sec4-4.jpg";
-import sec45 from "../Assets/electronics/sec4-5.jpg";
-import sec46 from "../Assets/electronics/sec4-6.jpg";
+import sec41 from "../assets/electronics/sec4-1.jpg";
+import sec42 from "../assets/electronics/sec4-2.jpg";
+import sec43 from "../assets/electronics/sec4-3.jpg";
+import sec44 from "../assets/electronics/sec4-4.jpg";
+import sec45 from "../assets/electronics/sec4-5.jpg";
+import sec46 from "../assets/electronics/sec4-6.jpg";
 
-import sec51 from "../Assets/food/sec5-1.jpg";
-import sec52 from "../Assets/food/sec5-2.jpg";
-import sec53 from "../Assets/food/sec5-3.jpg";
-import sec54 from "../Assets/food/sec5-4.jpg";
-import sec55 from "../Assets/food/sec5-5.jpg";
+import sec51 from "../assets/food/sec5-1.jpg";
+import sec52 from "../assets/food/sec5-2.jpg";
+import sec53 from "../assets/food/sec5-3.jpg";
+import sec54 from "../assets/food/sec5-4.jpg";
+import sec55 from "../assets/food/sec5-5.jpg";
 
-import sec61 from "../Assets/food/sec6-1.jpg";
-import sec62 from "../Assets/food/sec6-2.jpg";
-import sec63 from "../Assets/food/sec6-3.jpg";
-import sec64 from "../Assets/food/sec6-4.jpg";
-import sec65 from "../Assets/food/sec6-5.jpg";
-import sec66 from "../Assets/food/sec6-6.jpg";
+import sec61 from "../assets/food/sec6-1.jpg";
+import sec62 from "../assets/food/sec6-2.jpg";
+import sec63 from "../assets/food/sec6-3.jpg";
+import sec64 from "../assets/food/sec6-4.jpg";
+import sec65 from "../assets/food/sec6-5.jpg";
+import sec66 from "../assets/food/sec6-6.jpg";
 
 // ---------------- Types ----------------
 interface Product {
