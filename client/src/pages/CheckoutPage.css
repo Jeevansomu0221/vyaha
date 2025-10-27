@@ -1,0 +1,149 @@
+/* src/pages/CheckoutPage.css */
+
+.checkout-container {
+  max-width: 900px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.checkout-container h1 {
+  text-align: center;
+  margin-bottom: 2rem;
+  color: #222;
+}
+
+/* Stepper */
+.checkout-steps {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+  font-weight: 600;
+  color: #aaa;
+}
+
+.checkout-steps div {
+  flex: 1;
+  text-align: center;
+  padding: 0.5rem 0;
+  border-bottom: 3px solid #ddd;
+  transition: 0.3s;
+}
+
+.checkout-steps .active-step {
+  color: #222;
+  border-bottom: 3px solid #4CAF50;
+}
+
+/* Sections */
+.checkout-section {
+  margin-bottom: 2rem;
+}
+
+.checkout-section h2 {
+  margin-bottom: 1rem;
+  color: #333;
+}
+
+/* Address Form */
+.address-form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.address-form input {
+  padding: 0.8rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 1rem;
+}
+
+.address-form input:focus {
+  border-color: #4CAF50;
+  outline: none;
+}
+
+/* Payment */
+.payment-options {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.payment-options label {
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.payment-options input {
+  margin-right: 8px;
+}
+
+/* Review Section */
+.review-address, .review-cart, .review-summary {
+  background: #f9f9f9;
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+}
+
+.review-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.4rem 0;
+}
+
+.review-summary {
+  font-size: 1.1rem;
+}
+
+.review-summary strong {
+  font-size: 1.2rem;
+  color: #222;
+}
+
+/* Buttons */
+button {
+  padding: 0.8rem 1.2rem;
+  border: none;
+  border-radius: 8px;
+  background: #4CAF50;
+  color: #fff;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+button:hover {
+  background: #43a047;
+}
+
+button:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+.next-btn,
+.confirm-btn {
+  margin-top: 1.5rem;
+  float: right;
+}
+
+.step-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1.5rem;
+}
+
+.step-actions button:first-child {
+  background: #ddd;
+  color: #333;
+}
+
+.step-actions button:first-child:hover {
+  background: #ccc;
+}

@@ -1,0 +1,16 @@
+{
+  "files": [],
+   "compilerOptions": {
+    "jsx": "react-jsx",   // for React 17+ new JSX transform
+    "module": "esnext",
+    "target": "es6",
+    "moduleResolution": "node",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true
+  },
+  "references": [
+    { "path": "./tsconfig.app.json" },
+    { "path": "./tsconfig.node.json" }
+  ]
+}
