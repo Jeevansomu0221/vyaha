@@ -1,6 +1,8 @@
 import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
+import path from "path";
+import { fileURLToPath } from "url";
 import connectDB from "./config/db.js";
 
 // Import all route files
@@ -19,10 +21,16 @@ dotenv.config();
 
 const app = express();
 
+// For ES modules __dirname fix
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 // Enhanced CORS configuration - Allow frontend ports
 app.use(
   cors({
-    origin: ["http://localhost:5173", "http://localhost:5174"], 
+    origin: process.env.NODE_ENV === "production" 
+      ? process.env.CLIENT_URL 
+      : ["http://localhost:5173", "http://localhost:5174"], 
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
@@ -43,7 +51,7 @@ app.use(express.urlencoded({ limit: "10mb", extended: true }));
 connectDB();
 
 // ------------------------
-// ROUTES
+// API ROUTES
 // ------------------------
 
 // Auth routes
@@ -56,10 +64,10 @@ app.use("/api/products", productRoutes);
 
 // Seller routes (PROTECTED - seller authentication required)
 app.use("/api/seller/profile", sellerProfileRoutes);
-app.use("/api/seller/products", sellerProductRoutes); // Seller manages their products
+app.use("/api/seller/products", sellerProductRoutes);
 
 // Admin routes (PROTECTED - admin authentication required)
-app.use("/api/admin/products", adminProductRoutes); // Admin manages product approvals
+app.use("/api/admin/products", adminProductRoutes);
 app.use("/api/admin", adminRoutes);
 
 // Cart & Order routes
@@ -256,17 +264,33 @@ app.get("/api/health", (req, res) => {
 });
 
 // ------------------------
+// SERVE REACT APP IN PRODUCTION
+// ------------------------
+
+if (process.env.NODE_ENV === "production") {
+  // Serve static files from React build
+  app.use(express.static(path.join(__dirname, "../client/dist")));
+  
+  // Handle React routing - return index.html for all non-API routes
+  app.get("*", (req, res) => {
+    res.sendFile(path.join(__dirname, "../client/dist/index.html"));
+  });
+}
+
+// ------------------------
 // ERROR HANDLING
 // ------------------------
 
-// 404 handler
-app.use((req, res) => {
-  res.status(404).json({
-    message: "Route not found",
-    path: req.path,
-    method: req.method
+// 404 handler (only in development, production uses React router)
+if (process.env.NODE_ENV !== "production") {
+  app.use((req, res) => {
+    res.status(404).json({
+      message: "Route not found",
+      path: req.path,
+      method: req.method
+    });
   });
-});
+}
 
 // Global error handler
 app.use((err, req, res, next) => {
@@ -285,6 +309,7 @@ const PORT = process.env.PORT || 7000;
 app.listen(PORT, () => {
   console.log("=====================================");
   console.log(`✅ Server running on: http://localhost:${PORT}`);
+  console.log(`✅ Environment: ${process.env.NODE_ENV || "development"}`);
   console.log(`✅ API base URL: http://localhost:${PORT}/api`);
   console.log("=====================================");
   console.log("📋 Available Routes:");
@@ -310,4 +335,8 @@ app.listen(PORT, () => {
   console.log("    - GET /api/debug/test-admin-auth");
   console.log("    - GET /api/debug/test-seller-auth");
   console.log("=====================================");
+  
+  if (process.env.NODE_ENV === "production") {
+    console.log("🌐 Serving React app from /client/dist");
+  }
 });
