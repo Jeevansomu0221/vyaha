@@ -3,7 +3,7 @@ import express from "express";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import crypto from "crypto";
-import Seller from "../models/seller.js";
+import Seller from "./models/Seller.js";
 import sendEmail from "../utils/sendEmail.js";
 
 const router = express.Router();
