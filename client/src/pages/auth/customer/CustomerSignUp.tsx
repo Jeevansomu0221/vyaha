@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../../../context/AuthContext";
 import api from "../../../api/axios";
+import "./auth.css";
 
-// Define types for API responses
 interface SignUpResponse {
   message: string;
 }
@@ -32,79 +32,79 @@ const CustomerSignUp: React.FC = () => {
   const [password, setPassword] = useState("");
   const [otp, setOtp] = useState("");
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
-  e.preventDefault();
-  setLoading(true);
-  
-  try {
-    console.log("🔄 Attempting signup with:", { name, email, password: "***" });
-    
-    const response = await api.post<SignUpResponse>("/auth/signup", { 
-      name, 
-      email: email.toLowerCase().trim(),
-      password 
-    });
-    
-    console.log("✅ Signup successful:", response.data);
-    alert(response.data.message);
-    setStep("otp");
-  } catch (error: any) {
-    console.error("❌ FULL Signup error object:", error);
-    console.error("❌ Error response data:", error.response?.data);
-    console.error("❌ Error status:", error.response?.status);
-    
-    if (error.response?.data?.message) {
-      alert(`Signup failed: ${error.response.data.message}`);
-    } else if (error.code === 'ERR_NETWORK') {
-      alert("Cannot connect to server. Please check if the backend is running.");
-    } else {
-      alert("Signup failed. Please try again.");
+    e.preventDefault();
+    setLoading(true);
+    setError("");
+    setSuccess("");
+
+    try {
+      console.log("🔄 Attempting signup with:", { name, email });
+
+      const response = await api.post<SignUpResponse>("/auth/signup", {
+        name,
+        email: email.toLowerCase().trim(),
+        password,
+      });
+
+      console.log("✅ Signup successful:", response.data);
+      setSuccess(response.data.message);
+      setStep("otp");
+    } catch (error: any) {
+      console.error("❌ Signup error:", error);
+
+      if (error.response?.data?.message) {
+        setError(error.response.data.message);
+      } else if (error.code === "ERR_NETWORK") {
+        setError("Cannot connect to server. Please check if the backend is running.");
+      } else {
+        setError("Signup failed. Please try again.");
+      }
+    } finally {
+      setLoading(false);
     }
-  } finally {
-    setLoading(false);
-  }
-};
+  };
 
   const handleVerifyOTP = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    
+    setError("");
+
     try {
       console.log("🔄 Verifying OTP for:", email);
-      
-      // Verify OTP with proper typing
-      const verifyResponse = await api.post<VerifyOTPResponse>("/auth/verify-otp", { 
-        email: email.toLowerCase().trim(), 
-        otp 
+
+      await api.post<VerifyOTPResponse>("/auth/verify-otp", {
+        email: email.toLowerCase().trim(),
+        otp,
       });
 
-      console.log("✅ OTP verified:", verifyResponse.data.message);
-      
+      console.log("✅ OTP verified");
+
       // Auto sign in after verification
-      console.log("🔄 Attempting auto login...");
-      const signinResponse = await api.post<SignInResponse>("/auth/signin", { 
-        email: email.toLowerCase().trim(), 
-        password 
+      const signinResponse = await api.post<SignInResponse>("/auth/signin", {
+        email: email.toLowerCase().trim(),
+        password,
       });
-      
-      // TypeScript knows the structure of signinResponse.data
+
       const { user, token } = signinResponse.data;
-      
-      // Login with properly typed user data
-      login(user);
+
       localStorage.setItem("token", token);
-      
+      login(user);
+
       console.log("✅ Login successful:", user);
-      alert("Account verified & signed in!");
-      navigate("/");
+      setSuccess("Account verified & signed in!");
+      
+      setTimeout(() => navigate("/"), 1000);
     } catch (error: any) {
       console.error("❌ OTP verification error:", error);
-      
+
       if (error.response?.data?.message) {
-        alert(`Verification failed: ${error.response.data.message}`);
+        setError(error.response.data.message);
       } else {
-        alert("OTP verification failed. Please try again.");
+        setError("OTP verification failed. Please try again.");
       }
     } finally {
       setLoading(false);
@@ -113,59 +113,111 @@ const CustomerSignUp: React.FC = () => {
 
   return (
     <div className="auth-container">
-      <h2>Customer Sign Up</h2>
+      <div className="auth-card">
+        <h2 className="auth-title">Customer Sign Up</h2>
 
-      {step === "form" && (
-        <form onSubmit={handleSubmit}>
-          <input
-            type="text"
-            placeholder="Full Name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            required
-            disabled={loading}
-            minLength={2}
-          />
-          <input
-            type="email"
-            placeholder="Email Address"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-            disabled={loading}
-          />
-          <input
-            type="password"
-            placeholder="Password (min 6 characters)"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-            disabled={loading}
-            minLength={6}
-          />
-          <button type="submit" disabled={loading}>
-            {loading ? "Signing Up..." : "Sign Up"}
-          </button>
-        </form>
-      )}
+        {error && <div className="auth-error">{error}</div>}
+        {success && <div className="auth-success">{success}</div>}
 
-      {step === "otp" && (
-        <form onSubmit={handleVerifyOTP}>
-          <p>Check your email for the OTP code</p>
-          <input
-            type="text"
-            placeholder="Enter OTP"
-            value={otp}
-            onChange={(e) => setOtp(e.target.value)}
-            required
-            disabled={loading}
-            maxLength={6}
-          />
-          <button type="submit" disabled={loading}>
-            {loading ? "Verifying..." : "Verify OTP"}
-          </button>
-        </form>
-      )}
+        {step === "form" && (
+          <form onSubmit={handleSubmit} className="auth-form">
+            <div className="form-group">
+              <label htmlFor="name">Full Name</label>
+              <input
+                id="name"
+                type="text"
+                placeholder="Enter your full name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                required
+                disabled={loading}
+                minLength={2}
+                className="form-input"
+              />
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="email">Email Address</label>
+              <input
+                id="email"
+                type="email"
+                placeholder="Enter your email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                disabled={loading}
+                className="form-input"
+              />
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="password">Password</label>
+              <input
+                id="password"
+                type="password"
+                placeholder="Minimum 6 characters"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                disabled={loading}
+                minLength={6}
+                className="form-input"
+              />
+            </div>
+
+            <button type="submit" disabled={loading} className="auth-button">
+              {loading ? "Signing Up..." : "Sign Up"}
+            </button>
+          </form>
+        )}
+
+        {step === "otp" && (
+          <form onSubmit={handleVerifyOTP} className="auth-form">
+            <p className="otp-instruction">
+              📧 Check your email for the OTP code
+            </p>
+
+            <div className="form-group">
+              <label htmlFor="otp">OTP Code</label>
+              <input
+                id="otp"
+                type="text"
+                placeholder="Enter 6-digit code"
+                value={otp}
+                onChange={(e) => setOtp(e.target.value)}
+                required
+                disabled={loading}
+                maxLength={6}
+                className="form-input otp-input"
+              />
+            </div>
+
+            <button type="submit" disabled={loading} className="auth-button">
+              {loading ? "Verifying..." : "Verify OTP"}
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setStep("form")}
+              className="auth-button-secondary"
+              disabled={loading}
+            >
+              Back to Sign Up
+            </button>
+          </form>
+        )}
+
+        {step === "form" && (
+          <div className="auth-footer">
+            <p>
+              Already have an account?{" "}
+              <Link to="/signin/customer" className="auth-link">
+                Sign In
+              </Link>
+            </p>
+          </div>
+        )}
+      </div>
     </div>
   );
 };

@@ -1,19 +1,20 @@
 // src/context/AuthContext.tsx
 import React, { createContext, useState, useContext, useEffect, type ReactNode } from "react";
 
-// Import or define User interface
-interface User {
-  id: string;
-  name: string;
+// Updated User interface - made token optional
+export interface User {
+  id: string | number;
+  name?: string; // Optional for signin (mock data might not have it)
   email: string;
   role: string;
-   token: string;
+  token?: string; // Optional since it's stored separately in localStorage
 }
 
 interface AuthContextType {
   user: User | null;
   login: (userData: User) => void;
   logout: () => void;
+  isAuthenticated: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -32,13 +33,17 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const login = (userData: User) => {
     setUser(userData);
     localStorage.setItem("authUser", JSON.stringify(userData));
-    localStorage.setItem("token", userData.token); 
+    
+    // Store token separately if it exists
+    if (userData.token) {
+      localStorage.setItem("token", userData.token);
+    }
   };
 
   const logout = () => {
     setUser(null);
     localStorage.removeItem("authUser");
-    localStorage.removeItem("token"); // Also clear token
+    localStorage.removeItem("token");
   };
 
   // Keep user in sync if localStorage changes
@@ -47,10 +52,17 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     if (savedUser && !user) {
       setUser(JSON.parse(savedUser));
     }
-  }, []);
+  }, [user]);
 
   return (
-    <AuthContext.Provider value={{ user, login, logout }}>
+    <AuthContext.Provider 
+      value={{ 
+        user, 
+        login, 
+        logout,
+        isAuthenticated: !!user 
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );

@@ -1,67 +1,118 @@
 import React, { useState } from "react";
 import { useNavigate, Link, useLocation } from "react-router-dom";
-import { useAuth } from "../../../context/AuthContext"; // ✅ import auth
+import { useAuth } from "../../../context/AuthContext";
+import api from "../../../api/axios";
+import "./auth.css";
+
+interface SignInResponse {
+  token: string;
+  user: {
+    id: string;
+    name: string;
+    email: string;
+    role: string;
+  };
+}
 
 const CustomerSignIn: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { login } = useAuth(); // ✅ use login from context
+  const { login } = useAuth();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
-  // get redirect param if present
   const searchParams = new URLSearchParams(location.search);
   const redirect = searchParams.get("redirect") || "/";
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setLoading(true);
+    setError("");
 
-    // TODO: replace with real API call
-    console.log("Customer Sign In:", { email, password });
+    try {
+      console.log("🔄 Attempting signin with:", { email });
 
-    // Mock user object
-    const userData = {
-      id: Date.now(),
-      email,
-      role: "customer",
-    };
+      const response = await api.post<SignInResponse>("/auth/signin", {
+        email: email.toLowerCase().trim(),
+        password,
+      });
 
-    // ✅ store user in AuthContext (and localStorage)
-    login(userData);
+      const { user, token } = response.data;
 
-    // ✅ go to redirect page or home
-    navigate(redirect, { replace: true });
+      // Store token and login
+      localStorage.setItem("token", token);
+      login(user);
+
+      console.log("✅ Login successful:", user);
+      navigate(redirect, { replace: true });
+    } catch (error: any) {
+      console.error("❌ Signin error:", error);
+
+      if (error.response?.data?.message) {
+        setError(error.response.data.message);
+      } else if (error.code === "ERR_NETWORK") {
+        setError("Cannot connect to server. Please check your connection.");
+      } else {
+        setError("Sign in failed. Please try again.");
+      }
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <div className="auth-container">
-      <h2>Customer Sign In</h2>
-      <form onSubmit={handleSubmit}>
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
-        <button type="submit">Sign In</button>
-      </form>
+      <div className="auth-card">
+        <h2 className="auth-title">Customer Sign In</h2>
 
-      {/* Sign Up Link */}
-      <p style={{ marginTop: "10px" }}>
-        Don't have an account?{" "}
-        <Link to="/signup/customer" style={{ color: "blue" }}>
-          Sign Up
-        </Link>
-      </p>
+        {error && <div className="auth-error">{error}</div>}
+
+        <form onSubmit={handleSubmit} className="auth-form">
+          <div className="form-group">
+            <label htmlFor="email">Email Address</label>
+            <input
+              id="email"
+              type="email"
+              placeholder="Enter your email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              disabled={loading}
+              className="form-input"
+            />
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="password">Password</label>
+            <input
+              id="password"
+              type="password"
+              placeholder="Enter your password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              disabled={loading}
+              className="form-input"
+            />
+          </div>
+
+          <button type="submit" disabled={loading} className="auth-button">
+            {loading ? "Signing In..." : "Sign In"}
+          </button>
+        </form>
+
+        <div className="auth-footer">
+          <p>
+            Don't have an account?{" "}
+            <Link to="/signup/customer" className="auth-link">
+              Sign Up
+            </Link>
+          </p>
+        </div>
+      </div>
     </div>
   );
 };
